@@ -14,9 +14,6 @@ export default function ProductList({ products }: ProductListProps) {
         <ProductCard
           key={product.id}
           product={product}
-          onAddToCart={(product) => {
-            console.log('Produit ajouté au panier:', product);
-          }}
         />
       ))}
     </div>

@@ -3,6 +3,8 @@
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import CheckoutForm from '@/components/CheckoutForm';
+import { ShippingOption, CheckoutFormData } from '@/types';
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
@@ -12,12 +14,35 @@ export default function CartPage() {
     setMounted(true);
   }, []);
 
-  const total = items.reduce(
+  const subtotal = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
-  if (!mounted) return null;
+  const handleCheckout = (formData: CheckoutFormData, selectedShipping: ShippingOption) => {
+    console.log('Commande soumise:', {
+      formData,
+      items,
+      shipping: selectedShipping,
+      total: subtotal + selectedShipping.price
+    });
+    // Ici vous pouvez ajouter la logique pour traiter la commande
+  };
+
+  // Afficher un placeholder pendant l'hydratation
+  if (!mounted) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
+          <div className="space-y-4">
+            <div className="h-24 bg-gray-200 rounded"></div>
+            <div className="h-24 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -89,67 +114,12 @@ export default function CartPage() {
             ))}
           </div>
 
-          {/* Résumé de la commande */}
+          {/* Formulaire de commande */}
           <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-lg shadow-sm sticky top-24">
-              <h2 className="text-xl font-semibold mb-4">Résumé de la commande</h2>
-              
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sous-total</span>
-                  <span>
-                    {total.toLocaleString('fr-FR', {
-                      style: 'currency',
-                      currency: 'EUR',
-                    })}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Livraison</span>
-                  <span>Gratuite</span>
-                </div>
-                <div className="flex justify-between pt-3 border-t font-semibold">
-                  <span>Total</span>
-                  <span>
-                    {total.toLocaleString('fr-FR', {
-                      style: 'currency',
-                      currency: 'EUR',
-                    })}
-                  </span>
-                </div>
-              </div>
-
-              <form className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full border rounded-md p-2"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                    Adresse de livraison
-                  </label>
-                  <textarea
-                    id="address"
-                    rows={3}
-                    className="w-full border rounded-md p-2"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-blue-500 text-white py-3 rounded-full hover:bg-blue-600 transition-colors"
-                >
-                  Commander
-                </button>
-              </form>
-            </div>
+            <CheckoutForm
+              subtotal={subtotal}
+              onSubmit={handleCheckout}
+            />
           </div>
         </div>
       )}
