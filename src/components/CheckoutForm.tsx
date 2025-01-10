@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ShippingOption, CheckoutFormData } from '@/types';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 interface CheckoutFormProps {
   subtotal: number;
@@ -16,6 +17,7 @@ const SHIPPING_OPTIONS: ShippingOption[] = [
 ];
 
 export default function CheckoutForm({ subtotal, onSubmit }: CheckoutFormProps) {
+  const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_OPTIONS[0]);
   const [formData, setFormData] = useState<CheckoutFormData>({
@@ -45,8 +47,14 @@ export default function CheckoutForm({ subtotal, onSubmit }: CheckoutFormProps) 
     </div>;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!session) {
+      router.push('/login?callbackUrl=/payment');
+      return;
+    }
+
     onSubmit(formData, selectedShipping);
     router.push('/payment');
   };
