@@ -19,6 +19,9 @@ export default function Navbar() {
             <Link href="/" className="text-gray-900 font-medium">
               Accueil
             </Link>
+            <Link href="/product" className="text-gray-600 hover:text-gray-900">
+              Store
+            </Link>
             <Link href="/mac" className="text-gray-600 hover:text-gray-900">
               Mac
             </Link>

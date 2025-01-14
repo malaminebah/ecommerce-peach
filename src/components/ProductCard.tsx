@@ -17,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <>
       <div 
-        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
+        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="relative h-64 w-full bg-gray-100">
@@ -31,8 +31,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         </div>
         <div className="p-6">
-          <h3 className="text-xl font-medium text-gray-900">{product.name}</h3>
-          <p className="mt-2 text-gray-500 text-sm">{product.description}</p>
+          <h3 className="text-xl font-medium text-gray-900">
+            {product.name}
+          </h3>
+          <p className="mt-2 text-gray-500">
+            {product.description}
+          </p>
           <div className="mt-4 flex items-center justify-between">
             <span className="text-gray-900 font-medium">
               {product.price.toLocaleString('fr-FR', {
@@ -42,7 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
             <button
               onClick={(e) => {
-                e.stopPropagation(); // Empêche l'ouverture du modal
+                e.stopPropagation();
                 addItem(product);
               }}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"

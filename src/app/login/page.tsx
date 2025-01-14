@@ -40,6 +40,7 @@ export default function LoginPage() {
         router.push(callbackUrl);
       }
     } catch (err) {
+      console.log(err);
       setError('Une erreur est survenue lors de la connexion');
     } finally {
       setIsLoading(false);
